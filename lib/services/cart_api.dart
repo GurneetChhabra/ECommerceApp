@@ -64,19 +64,23 @@ class FakeCartApi {
   }
 }
 
-// Future<void> fetchProducts() async {
-//   final response = await http.get(
-//     Uri.parse('https://fakestoreapi.com/products'),
-//   );
+static Future<ProductModel?> fetchProductsById(int id) async {
+  await Future.delayed(const Duration(seconds: 2)); 
+  
+  final response = await http.get(
+    Uri.parse('https://fakestoreapi.com/products/$id'),
+  );
 
-//   if (response.statusCode == 200) {
-//     final List data = json.decode(response.body);
+  if (response.statusCode == 200) {
+    final  data = jsonDecode(response.body);
 
-//     allProducts = data.map((e) => ProductModel.fromJson(e)).toList();
-//     filteredProducts = allProducts;
+    ProductModel? product = ProductModel.fromJson(data);
+   return product;
 
-//   }
-// }
+  } else{
+    throw Exception("Failed to load product");
+  }
+}
 
 
 }

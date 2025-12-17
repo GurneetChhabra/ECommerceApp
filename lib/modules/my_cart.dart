@@ -72,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(image: cartItems[index].image, title: cartItems[index].title, price: cartItems[index].price)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(id: cartItems[index].id)));
                 },
                 child: CartItemCard(
                   key: ValueKey(cartItems[index].id),

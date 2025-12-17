@@ -52,7 +52,7 @@ class _ProductListState extends State<ProductList> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(image: data[index].image, title: data[index].title, price: data[index].price)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(id: data[index].id)));
                 },
                 child: ProductCard(item: data[index]));
             },
