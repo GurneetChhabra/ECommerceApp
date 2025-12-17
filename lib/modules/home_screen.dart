@@ -338,42 +338,90 @@ class _HomeScreenState extends State<HomeScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
-                      childAspectRatio: 0.72,
+                      childAspectRatio: 0.86,
                     ),
-                    itemCount: 4,
+                    itemCount: allProducts.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 224, 222, 222),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Icon(Icons.favorite_border,
-                                  color: Colors.orange[400]),
-                            ),
-                            const SizedBox(height: 8),
-                            Center(
-                              child: Icon(Icons.headphones,
-                                  size: 60, color: Colors.grey),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text('Wireless Headphones',
-                                style: TextStyle(fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 4),
-                            const Text('\$70.00',
-                                style: TextStyle(color: Colors.grey)),
-                          ],
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(image: allProducts[index].image, title: allProducts[index].title, price: allProducts[index].price)));
+                        },
+                        child: Container(
+                          // width: 159,
+                          // height: 150,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 224, 222, 222),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 21,
+                                left: 40,
+                                right: 45,
+                                child: Image.network(
+                                  allProducts[index].image,
+                                  width: 90,
+                                  height: 90,
+                                ),
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 36,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange[400],
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(16),
+                                          bottomLeft: Radius.circular(10))),
+                                  child: Center(
+                                    child: Icon(Icons.favorite_border,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 140,
+                                left: 10,
+                                child: Container(
+                                  width: 120,
+                                  height: 20,
+                                  child: Text(allProducts[index].title,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                ),
+                              ),
+                              Positioned(
+                                top: 161,
+                                left: 10,
+                                child: Text(
+                                    "\$ ${allProducts[index].price.toString()}",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                              Positioned(
+                                top: 166,
+                                left: 87,
+                                child: Row(
+                                  children: [
+                                    _colorDot(Colors.black),
+                                    _colorDot(Colors.red),
+                                    _colorDot(Colors.orange),
+                                    _colorDot(Colors.blue),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -397,16 +445,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             final product = filteredProducts[index];
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(image: product.image, title: product.title, price: product.price)));
-                              },
-                              child: ProductCard(item: product));
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailScreen(
+                                                  image: product.image,
+                                                  title: product.title,
+                                                  price: product.price)));
+                                },
+                                child: ProductCard(item: product));
                           },
                         ),
                 ),
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _colorDot(Color color) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
       ),
     );
   }
