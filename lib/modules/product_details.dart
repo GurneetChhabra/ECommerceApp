@@ -45,12 +45,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _iconButton(Icons.arrow_back),
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.arrow_back, color: Colors.black),
+                        ),
+                  ),
                   Row(
                     children: [
-                      _iconButton(Icons.share),
+                      CircleAvatar(
+      backgroundColor: Colors.white,
+      child: Icon(Icons.share, color: Colors.black),
+    ),
+                    
                       const SizedBox(width: 8),
-                      _iconButton(Icons.favorite_border),
+                      CircleAvatar(
+      backgroundColor: Colors.white,
+      child: Icon(Icons.favorite_border, color: Colors.black),
+    ),
                     ],
                   )
                 ],
@@ -198,13 +211,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _iconButton(IconData icon) {
-    return CircleAvatar(
-      backgroundColor: Colors.white,
-      child: Icon(icon, color: Colors.black),
     );
   }
 
