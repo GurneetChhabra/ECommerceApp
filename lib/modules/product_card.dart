@@ -18,7 +18,6 @@ class ProductCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          /// PRODUCT IMAGE
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
@@ -31,7 +30,6 @@ class ProductCard extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          /// DETAILS
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

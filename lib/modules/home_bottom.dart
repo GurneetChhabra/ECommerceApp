@@ -1,7 +1,6 @@
 import 'package:ecommerce_app/modules/my_cart.dart';
 import 'package:flutter/material.dart';
 
-
 import 'home_screen.dart';
 
 class HomeBottomScreen extends StatefulWidget {
@@ -18,38 +17,36 @@ class _HomeBottomScreenState extends State<HomeBottomScreen> {
   int currentIndex = 0;
   UniqueKey uniqueKey = UniqueKey();
   List<Widget> screens = [];
-  bool isUpdated = false; 
-
-
+  bool isUpdated = false;
 
   @override
   void initState() {
-    print("------------------------------------------------------in initstate of homebottom -------------------------------------------------");
-    screens = [
-      HomeScreen(),
-      CartScreen(),
-      CartScreen(),
-      CartScreen()
-    ];
+    print(
+        "------------------------------------------------------in initstate of homebottom -------------------------------------------------");
+    screens = [HomeScreen(), CartScreen(), CartScreen(), CartScreen()];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return
-        Scaffold(
-                body: IndexedStack(
-                  index: currentIndex,
-                  children: screens,
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: currentIndex,
-                  onTap: (value) {
-                    setState(() {
-                    currentIndex = value;
-                    });
-                  },
+    return Scaffold(
+      body: IndexedStack(
+        index: currentIndex,
+        children: screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (value) {
+          setState(() {
+            screens.removeAt(1);
+            screens.insert(
+                1,
+                CartScreen(
+                  key: UniqueKey(),
+                ));
+            currentIndex = value;
+          });
+        },
         selectedItemColor: const Color(0xffff3e00),
         unselectedItemColor: Colors.grey,
         items: const [
@@ -64,8 +61,6 @@ class _HomeBottomScreenState extends State<HomeBottomScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ''),
         ],
       ),
-              );
+    );
   }
-
-
 }

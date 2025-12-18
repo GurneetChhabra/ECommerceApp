@@ -27,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _controller.forward();
 
-    // Navigate to Login Screen after 3 seconds
     Timer(const Duration(seconds: 3), () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
     });
@@ -49,19 +48,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Logo (Replace with your own image asset)
               Image.asset(
                 'assets/images/logo.png',
                 width: 100,
               ),
               const SizedBox(height: 20),
-              // App Name
               const Text(
                 'Your E-Commerce App',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xffff3e00), // Your chosen color
+                  color: Color(0xffff3e00),
                 ),
               ),
             ],

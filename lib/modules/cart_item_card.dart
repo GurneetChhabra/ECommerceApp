@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/models/cart.dart';
+import 'package:ecommerce_app/models/product.dart';
 import 'package:flutter/material.dart';
 
 class CartItemCard extends StatelessWidget {
@@ -27,7 +28,6 @@ class CartItemCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// PRODUCT IMAGE
           Container(
             width: 100,
             height: 100,
@@ -47,12 +47,10 @@ class CartItemCard extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          /// DETAILS
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// TITLE + DELETE ICON
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -75,7 +73,7 @@ class CartItemCard extends StatelessWidget {
                       child: Icon(
                         Icons.delete_outline,
                         size: 20,
-                        color: Color(0xffff7a00), // exact orange tone
+                        color: Color(0xffff7a00),
                       ),
                     ),
                   ],
@@ -93,7 +91,6 @@ class CartItemCard extends StatelessWidget {
 
                 const SizedBox(height: 8),
 
-                /// PRICE + QUANTITY CONTROLS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -105,7 +102,6 @@ class CartItemCard extends StatelessWidget {
                       ),
                     ),
 
-                    /// QUANTITY CONTROL
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -131,14 +127,12 @@ class CartItemCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // const SizedBox(width: 8),
                           Text(
                             item.quantity.toString(),
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          // const SizedBox(width: 8),
                           InkWell(
                             onTap: () {
                               onAdd();

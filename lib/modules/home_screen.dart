@@ -54,17 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-//   void searchProduct(String query) {
-//   final result = allProducts.where((product) {
-//     final title = product.title.toLowerCase();
-//     final search = query.toLowerCase();
-//     return title.contains(search);
-//   }).toList();
 
-//   setState(() {
-//     filteredProducts = result;
-//   });
-// }
 
   void searchProduct(String query) {
     if (query.isEmpty) {
@@ -265,7 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         itemCount: data.length,
                                         itemBuilder: (context, index) {
-                                          // final isSelected = index == 0;
 
                                           return Column(
                                             mainAxisSize: MainAxisSize.min,
