@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/modules/product_card.dart';
 import 'package:ecommerce_app/modules/product_details.dart';
 import 'package:ecommerce_app/modules/product_list.dart';
 import 'package:ecommerce_app/services/cart_api.dart';
+import 'package:ecommerce_app/services/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -37,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  fetchAllProducts() async {
+  fetchAllProducts(BuildContext context) async {
     final response = await http.get(
       Uri.parse('https://fakestoreapi.com/products'),
     );
@@ -48,6 +52,24 @@ class _HomeScreenState extends State<HomeScreen> {
       allProducts = data.map((e) => ProductModel.fromJson(e)).toList();
       filteredProducts = allProducts;
 
+      List<CartItemModel> cartItems = [];
+      for (int i=0;i<3;i++) {
+
+
+          // products.add(product);
+          cartItems.add(
+            CartItemModel(
+              id: i,
+              title: allProducts[i].title,
+              category: allProducts[i].category,
+              image:  allProducts[i].image,
+              price: allProducts[i].price,
+              quantity: i==0 ? 4 : i==1 ? 1: i==2 ? 6 : 10,
+            ),
+          );
+        
+      }
+    Provider.of<CartState>(context, listen: false).setCartItems(cartItems);
       setState(() {
         isLoading = false;
       });
@@ -79,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     categories = FakeCartApi.fetchCategories();
-    fetchAllProducts();
+    fetchAllProducts(context);
     super.initState();
   }
 
@@ -122,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: Color.fromARGB(255, 224, 222, 222),
                           radius: 20,
                           child: Icon(
-                            Icons.grid_view_outlined,
+                            Icons.grid_view_rounded,
                             color: Colors.black,
                           ),
                         ),
@@ -155,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.search, color: Colors.grey),
+                                Icon(Icons.search, color: Colors.black),
                                 SizedBox(width: 10),
                                 Expanded(
                                   child: TextField(
@@ -169,53 +191,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                Icon(Icons.tune, color: Colors.grey),
+                                Icon(Icons.filter_list, color: Colors.black),
                               ],
                             ),
                           ),
                           SizedBox(
                             height: 25,
                           ),
-                          Container(
-                            height: 140,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              gradient: const LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [Color(0xffff7a18), Color(0xffff3e00)],
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'Super Sale\nDiscount',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 6),
-                                      Text(
-                                        'Up to 50%',
-                                        style: TextStyle(color: Colors.white70),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Icon(Icons.shopping_bag,
-                                    color: Colors.white, size: 60),
-                              ],
-                            ),
-                          ),
+                          getSaleImages(),
+                          // Container(
+                          //   width: 330,
+                          //   height: 180,
+                          //   decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.all(Radius.circular(20)),
+                          //     image: DecorationImage(image: AssetImage("assets/images/shoe_discount1.png"),
+                          //     fit: BoxFit.fill
+                          //   ),
+                          //   )
+                          // ),
                           SizedBox(
                             height: 25,
                           ),
@@ -464,5 +457,69 @@ class _HomeScreenState extends State<HomeScreen> {
         shape: BoxShape.circle,
       ),
     );
+  }
+final PageController _controller = PageController();
+  Widget getSaleImages(){
+    return Stack(
+  alignment: Alignment.bottomCenter,
+  children: [
+    SizedBox(
+      height: 180,
+        // decoration: BoxDecoration(
+        //                       borderRadius: BorderRadius.all(Radius.circular(20)),
+        // ),
+      child: PageView(
+        controller: _controller,
+        children: [
+          // Image.asset("assets/images/shoe_discount1.png", fit: BoxFit.fill),
+          // Image.asset("assets/images/shoe_sale.png", fit: BoxFit.fill),
+          Container(
+                            width: 330,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              image: DecorationImage(image: AssetImage("assets/images/shoe_discount1.png"),
+                              fit: BoxFit.fill
+                            ),
+                            )
+                          ),
+                           Container(
+                            width: 330,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              image: DecorationImage(image: AssetImage("assets/images/sale.png.avif"),
+                              fit: BoxFit.fill
+                            ),
+                            )
+                          ),
+                             Container(
+                            width: 330,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              image: DecorationImage(image: AssetImage("assets/images/tshirt.avif"),
+                              fit: BoxFit.fill
+                            ),
+                            )
+                          ),
+        ],
+      ),
+    ),
+    Positioned(
+      bottom: 12,
+      child: SmoothPageIndicator(
+        controller: _controller,
+        count: 3,
+        effect: WormEffect(
+          activeDotColor: Colors.black,
+          dotColor: Colors.grey.shade400,
+          dotHeight: 10,
+          dotWidth: 10,
+        ),
+      ),
+    ),
+  ],
+);
   }
 }

@@ -1,7 +1,9 @@
 import 'package:ecommerce_app/controllers/cart_controller.dart';
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/services/cart_api.dart';
+import 'package:ecommerce_app/services/cart_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int id;
@@ -260,7 +262,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   right: 15, top: 10, bottom: 10),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  CartController.addToCart(product!);
+                                 Provider.of<CartState>(context, listen: false).addToCart(product!);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

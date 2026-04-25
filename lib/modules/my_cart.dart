@@ -3,7 +3,9 @@ import 'package:ecommerce_app/modules/product_details.dart';
 import 'package:ecommerce_app/services/cart_api.dart';
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/modules/cart_item_card.dart';
+import 'package:ecommerce_app/services/cart_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -19,22 +21,23 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    cartFuture = FakeCartApi.fetchCartItems().then((items) {
-      var addedProducts = [...items];
-      for (final localItem in CartController.localCart) {
-      final index =
-          addedProducts.indexWhere((item) => item.id == localItem.id);
+    // cartFuture = FakeCartApi.fetchcartItems().then((items) {
+    //   var addedProducts = [...items];
+    //   for (final localItem in CartController.localCart) {
+    //   final index =
+    //       addedProducts.indexWhere((item) => item.id == localItem.id);
 
-      if (index != -1) {
-        addedProducts[index].quantity += localItem.quantity;
-      } else {
-        addedProducts.add(localItem);
-      }
-    }
-      cartItems = addedProducts;
+    //   if (index != -1) {
+    //     addedProducts[index].quantity += localItem.quantity;
+    //   } else {
+    //     addedProducts.add(localItem);
+    //   }
+    // }
 
-      return cartItems;
-    });
+    // FakeCartApi fakeCartApi = FakeCartApi();
+    
+
+    // return cartItems;
   }
 
   void incrementQty(int index) {
@@ -67,69 +70,69 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    cartItems = Provider.of<CartState>(context, listen: true).cartItems;
     return Scaffold(
-      backgroundColor: const Color(0xffF6F6F6),
-      appBar: AppBar(
-        title: const Text(
-          "My Cart",
-          style: TextStyle(color: Colors.black),
+        backgroundColor: const Color(0xffF6F6F6),
+        appBar: AppBar(
+          title: const Text(
+            "My Cart",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
+        body:
+            //  FutureBuilder<List<CartItemModel>>(
+            //   future: cartFuture,
+            //   builder: (context, snapshot) {
+                // if (cartItems.isEmpty) {
+                //   return const Center(child: CircularProgressIndicator());
+                // }
 
-      body: FutureBuilder<List<CartItemModel>>(
-        future: cartFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+            //     if (snapshot.hasError) {
+            //       return const Center(child: Text("Something went wrong"));
+            //     }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text("Something went wrong"));
-          }
+            //     if (cartItems.isEmpty) {
+            //       return const Center(child: Text("Your cart is empty"));
+            //     }
 
-          if (cartItems.isEmpty) {
-            return const Center(child: Text("Your cart is empty"));
-          }
-
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: cartItems.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetailScreen(id: cartItems[index].id),
-                          ),
-                        );
-                      },
-                      child: CartItemCard(
-                        key: ValueKey(cartItems[index].id),
-                        item: cartItems[index],
-                        onAdd: () => incrementQty(index),
-                        onRemove: () => decrementQty(index),
-                        onDelete: () => removeItem(index),
-                      ),
-                    );
-                  },
-                ),
+          cartItems.isNotEmpty ?  Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: cartItems.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProductDetailScreen(id: cartItems[index].id),
+                        ),
+                      );
+                    },
+                    child: CartItemCard(
+                      key: ValueKey(cartItems[index].id),
+                      item: cartItems[index],
+                      onAdd: () => incrementQty(index),
+                      onRemove: () => decrementQty(index),
+                      onDelete: () => removeItem(index),
+                    ),
+                  );
+                },
               ),
-
-              _billSection(),
-            ],
-          );
-        },
-      ),
-    );
+            ),
+            _billSection(),
+          ],
+        ) : Center(child: CircularProgressIndicator(),
+        //   },
+        // ),
+        ));
   }
 
   Widget _billSection() {
@@ -159,7 +162,6 @@ class _CartScreenState extends State<CartScreen> {
             isBold: true,
           ),
           const SizedBox(height: 12),
-
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
