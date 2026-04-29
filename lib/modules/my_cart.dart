@@ -108,6 +108,7 @@ class _CartScreenState extends State<CartScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
+                      print("this is the iod: ${cartItems[index].id}");
                       Navigator.push(
                         context,
                         MaterialPageRoute(

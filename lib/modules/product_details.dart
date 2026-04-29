@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ecommerce_app/controllers/cart_controller.dart';
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/services/cart_api.dart';
@@ -23,9 +25,12 @@ class ProductDetailScreen extends StatefulWidget {
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen>
+    with SingleTickerProviderStateMixin {
   ProductModel? product;
   int selectedColorIndex = 0;
+  late TabController _tabController;
+  int selectedTab = 0;
 
   final List<Color> availableColors = [
     Colors.black,
@@ -34,6 +39,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Colors.blue,
     Colors.grey,
   ];
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   getProduct() async {
     product = await FakeCartApi.fetchProductsById(widget.id);
@@ -47,6 +58,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     // TODO: implement initState
     getProduct();
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -116,6 +128,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -136,14 +149,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             const SizedBox(height: 8),
                             Row(
-                              children: const [
+                              children:  [
                                 Icon(Icons.star,
                                     color: Colors.orange, size: 18),
                                 SizedBox(width: 4),
-                                Text("4.8"),
+                              Text("${product!.rating!.rate}"),
                                 SizedBox(width: 6),
                                 Text(
-                                  "(320 Reviews)",
+                                  "(${product!.rating!.count} reviews)",
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 Spacer(),
@@ -192,18 +205,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                _tabButton("Description"),
-                                _tabButton("Specifications"),
-                                _tabButton("Reviews"),
+                                _pillTab("Description", 0),
+                                _pillTab("Specification", 1),
+                                _pillTab("Reviews", 2),
                               ],
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              "Lorem Ipsum is simply dummy text of the printing and "
-                              "typesetting industry. Lorem Ipsum has been the "
-                              "industry's standard dummy text ever since the 1500s.",
-                              style: TextStyle(color: Colors.grey),
-                            ),
+                            const SizedBox(height: 12),
+                            _tabContent(),
                             const SizedBox(height: 80),
                           ],
                         ),
@@ -262,7 +271,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   right: 15, top: 10, bottom: 10),
                               child: ElevatedButton(
                                 onPressed: () {
-                                 Provider.of<CartState>(context, listen: false).addToCart(product!);
+                                  Provider.of<CartState>(context, listen: false)
+                                      .addToCart(product!);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -364,6 +374,55 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Text(
       title,
       style: const TextStyle(fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget _tabContent() {
+    switch (selectedTab) {
+      case 0:
+        return Text(
+          "${product!.description}",
+          style: TextStyle(color: Colors.grey),
+        );
+      case 1:
+        return const Text(
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pain itself has come, with the consequence of gathering the elite. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. But the work of a certain time brings great labor and pain. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. So that the least of benefits comes, who among us exercises such labor. Nisi ut aliquip ex ea commodo consequat.",
+          style: TextStyle(color: Colors.grey),
+        );
+      case 2:
+        return  Text(
+          "Reviews:\n⭐  ${product!.rating!.rate}\nGood product!",
+          style: TextStyle(color: Colors.grey),
+        );
+      default:
+        return const SizedBox();
+    }
+  }
+
+  Widget _pillTab(String title, int index) {
+    final isSelected = selectedTab == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedTab = index;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.orange : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
     );
   }
 }

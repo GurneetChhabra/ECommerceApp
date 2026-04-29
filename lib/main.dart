@@ -8,9 +8,18 @@ import 'package:ecommerce_app/modules/splash_screen.dart';
 import 'package:ecommerce_app/services/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+
+SystemChrome.setSystemUIOverlayStyle(
+  SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,    
+  ),
+);
   runApp(
+
     MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => CartState())],

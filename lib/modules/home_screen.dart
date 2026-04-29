@@ -8,6 +8,7 @@ import 'package:ecommerce_app/modules/product_list.dart';
 import 'package:ecommerce_app/services/cart_api.dart';
 import 'package:ecommerce_app/services/cart_state.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -26,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isSearching = false;
 
   late Future<List<String>> categories;
+  List data = [];
+
   IconData getIcon(String category) {
     switch (category) {
       case 'electronics':
@@ -36,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return Icons.man;
       case "women's clothing":
         return Icons.woman;
+      case "All":
+        return Icons.grid_view;
       default:
         return Icons.category;
     }
@@ -55,11 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
       List<CartItemModel> cartItems = [];
       for (int i=0;i<3;i++) {
 
-
+       
           // products.add(product);
           cartItems.add(
             CartItemModel(
-              id: i,
+              id: i + 1,
               title: allProducts[i].title,
               category: allProducts[i].category,
               image:  allProducts[i].image,
@@ -102,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     categories = FakeCartApi.fetchCategories();
     fetchAllProducts(context);
+    data.add("All");
     super.initState();
   }
 
@@ -152,7 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: Color.fromARGB(255, 224, 222, 222),
                           radius: 20,
                           child: Icon(
-                            Icons.notifications_none,
+                            Icons.notifications_none_rounded,
+                            size: 27,
                             color: Colors.black,
                           ),
                         )
@@ -191,7 +198,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                Icon(Icons.filter_list, color: Colors.black),
+                                Row(
+                                  children: [
+                                    Icon(Icons.more_vert),
+                                    Icon(Icons.filter_list, color: Colors.black,size: 27,),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -231,26 +243,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Failed to load categories');
                                     }
 
-                                    final data = snapshot.data ?? [];
+                                    data.addAll(snapshot.data ?? []);
+                                    // data.insert(0,"All");
                                     {
-                                      return GridView.builder(
+                                      return ListView.builder(
                                         shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
                                         physics:
-                                            const NeverScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(),
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 4,
-                                          mainAxisSpacing: 10,
-                                          crossAxisSpacing: 10,
-                                          childAspectRatio: 0.8,
-                                        ),
+                                            horizontal: 0),
+                                        // gridDelegate:
+                                        //     const SliverGridDelegateWithFixedCrossAxisCount(
+                                        //   crossAxisCount: 1,
+                                        //   mainAxisSpacing: 10,
+                                        //   crossAxisSpacing: 10,
+                                        //   childAspectRatio: 0.8,
+                                          
+                                        // ),
                                         itemCount: data.length,
                                         itemBuilder: (context, index) {
 
                                           return Column(
-                                            mainAxisSize: MainAxisSize.min,
+                                            // mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
@@ -275,10 +292,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         getIcon(data[index]))),
                                               ),
                                               const SizedBox(height: 6),
-                                              Text(
-                                                data[index],
-                                                style: const TextStyle(
-                                                    fontSize: 12),
+                                              SizedBox(
+                                                width: 80,
+                                                child: Center(
+                                                  child: Text(
+                                                    data[index],
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           );
@@ -360,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 36,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                      color: Colors.orange[400],
+                                      color: Color.fromARGB(255, 253, 128, 86),
                                       borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(16),
                                           bottomLeft: Radius.circular(10))),
@@ -392,7 +415,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Positioned(
                                 top: 166,
-                                left: 87,
+                                left: 83,
                                 child: Row(
                                   children: [
                                     _colorDot(Colors.black),
@@ -449,9 +472,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _colorDot(Color color) {
     return Container(
-      margin: const EdgeInsets.only(right: 8),
-      width: 12,
-      height: 12,
+      margin: const EdgeInsets.only(right: 4),
+      width: 16,
+      height: 16,
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,

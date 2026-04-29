@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/models/rating.dart';
+
 class ProductModel {
   final int id;
   final String title;
@@ -5,6 +7,7 @@ class ProductModel {
   final String description;
   final String category;
   final String image;
+  final Rating? rating;
 
   ProductModel({
     required this.id,
@@ -13,6 +16,7 @@ class ProductModel {
     required this.description,
     required this.category,
     required this.image,
+    this.rating
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,9 @@ class ProductModel {
       description: json['description'],
       category: json['category'],
       image: json['image'],
+      rating: json['rating'] != null
+    ? Rating.fromJson(json['rating'])
+    : null,
     );
   }
 

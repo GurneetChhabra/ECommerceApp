@@ -12,30 +12,30 @@ class FakeCartApi {
   List<CartItemModel> cartItems = [];
 
 
-   Future<List<ProductModel>> fetchAllProducts(BuildContext context) async {
+  static Future<List<ProductModel>> fetchAllProducts() async {
     final response = await http.get(Uri.parse(_productUrl));
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
       
       List<ProductModel> data1 = data.map((json) => ProductModel.fromJson(json)).toList();
-        for (int i=1;i<4;i++) {
+      //   for (int i=1;i<4;i++) {
 
 
-          // products.add(product);
-          cartItems.add(
-            CartItemModel(
-              id: i,
-              title: data1[i].title,
-              category: data1[i].category,
-              image: data1[i].image,
-              price: data1[i].price,
-              quantity: i==1 ? 4 : i==2 ? 1: i==3 ? 6 : 10,
-            ),
-          );
+      //     // products.add(product);
+      //     cartItems.add(
+      //       CartItemModel(
+      //         id: i,
+      //         title: data1[i].title,
+      //         category: data1[i].category,
+      //         image: data1[i].image,
+      //         price: data1[i].price,
+      //         quantity: i==1 ? 4 : i==2 ? 1: i==3 ? 6 : 10,
+      //       ),
+      //     );
         
-      }
-      Provider.of<CartState>(context, listen: false).setCartItems(cartItems);
+      // }
+      // Provider.of<CartState>(context, listen: false).setCartItems(cartItems);
          return data1;
     } else {
       throw Exception('Failed to load products');
@@ -117,20 +117,43 @@ class FakeCartApi {
     }
   }
 
+  // static Future<ProductModel?> fetchProductsById(int id) async {
+  //   await Future.delayed(const Duration(seconds: 2));
+
+  //   final response = await http.get(
+  //     Uri.parse('https://fakestoreapi.com/products/$id'),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+
+  //     ProductModel? product = ProductModel.fromJson(data);
+  //     return product;
+  //   } else {
+  //     throw Exception("Failed to load product");
+  //   }
+  // }
   static Future<ProductModel?> fetchProductsById(int id) async {
+  try {
     await Future.delayed(const Duration(seconds: 2));
 
     final response = await http.get(
       Uri.parse('https://fakestoreapi.com/products/$id'),
     );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+    print("STATUS: ${response.statusCode}");
+    print("BODY: ${response.body}");
 
-      ProductModel? product = ProductModel.fromJson(data);
-      return product;
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
+      final data = jsonDecode(response.body);
+      return ProductModel.fromJson(data);
     } else {
-      throw Exception("Failed to load product");
+      print("Empty or invalid response");
+      return null;
     }
+  } catch (e) {
+    print("ERROR: $e");
+    return null;
   }
+}
 }

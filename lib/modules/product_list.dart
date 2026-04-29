@@ -20,7 +20,11 @@ class _ProductListState extends State<ProductList> {
   @override
   void initState() {
     super.initState();
+    if(widget.category! == "All"){
+      productFuture = FakeCartApi.fetchAllProducts();
+    } else{
     productFuture = FakeCartApi.fetchProductsByCategory(widget.category!);
+    }
   }
 
   @override

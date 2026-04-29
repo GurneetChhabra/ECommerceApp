@@ -102,52 +102,54 @@ class CartItemCard extends StatelessWidget {
                       ),
                     ),
 
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              onRemove();
-                            },
-                            child: Container(
-                              width: 30,
-                              height: 20,
-                              child: Icon(
-                                Icons.remove,
-                                size: 16,
-                                color: Colors.grey.shade700,
+                    SizedBox(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                onRemove();
+                              },
+                              child: Container(
+                                width: 35,
+                                height: 25,
+                                child: Icon(
+                                  Icons.remove,
+                                  size: 16,
+                                  color: Colors.grey.shade700,
+                                ),
                               ),
                             ),
-                          ),
-                          Text(
-                            item.quantity.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              onAdd();
-                            },
-                            child: Container(
-                              width: 30,
-                              height: 20,
-                              child: Icon(
-                                Icons.add,
-                                size: 16,
-                                color: Colors.grey.shade700,
+                            Text(
+                              item.quantity.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: () {
+                                onAdd();
+                              },
+                              child: Container(
+                                width: 35,
+                                height: 25,
+                                child: Icon(
+                                  Icons.add,
+                                  size: 16,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
